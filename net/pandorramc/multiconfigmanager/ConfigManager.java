@@ -105,7 +105,11 @@ public class ConfigManager {
 	}
 
 	public FileConfiguration getConfig(String name, Plugin plugin) {
-		File file = new File(plugin.getDataFolder(), name + ".yml");
+		File dir = plugin.getDataFolder();
+		if (!dir.isDirectory()) {
+			return null; 
+		}
+		File file = new File(dir, name + ".yml");
 		if (!file.exists()) {
 			return null;
 		}
@@ -150,9 +154,13 @@ public class ConfigManager {
 	}
 
 	public FileConfiguration reloadConfig(String name, Plugin plugin) {
+		File dir = plugin.getDataFolder();
+		if (!dir.isDirectory()) {
+			return null; 
+		}
 		FileConfiguration config = getConfig(name, plugin);
 		try {
-			config.load(new File(plugin.getDataFolder(), name + ".yml"));
+			config.load(new File(dir, name + ".yml"));
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
